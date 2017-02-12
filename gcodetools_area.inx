@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+    <name>Area</name>
+    <id>ru.cnc-club.filter.gcodetools_area_area_fill_area_artefacts_ptg</id>
+	<dependency type="executable" location="extensions">gcodetools.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<param name='active-tab' type="notebook">
+
+		<page name='area' _gui-text='Area'>	
+			<param name="max-area-curves" type="int" min="0" max="1000" _gui-text="Maximum area cutting curves:">100</param>
+			<param name="area-inkscape-radius" type="float" min="-1000" max="1000" _gui-text="Area width:">-10</param>
+			<param name="area-tool-overlap" type="float" min="0" max="1" _gui-text="Area tool overlap (0..0.9):">0</param>
+
+			<_param name="help" type="description">
+"Créer un décalage de zone": crée plusieurs décalages de chemin d'Inkscape pour remplir la zone du chemin d'origine jusqu'à la valeur "Rayon de zone".
+
+Les contours commencent de «1/2 D» jusqu'à la largeur totale «Largeur de zone» avec les pas «D» où D est pris à partir de la définition d'outil la plus proche (valeur «Diamètre de l'outil»).
+Un seul décalage sera créé si la "largeur de zone" est égale à "1/2 D".
+			</_param>
+		</page>		
+
+		<page name='area_fill' _gui-text='Fill area'>
+			<param name="area-fill-angle" type="float" min="-360" max="360" _gui-text="Area fill anlge">0</param>
+			<param name="area-fill-shift" type="float" min="-1" max="1" _gui-text="Area fill shift">0</param>
+			<param name="area-fill-method" type="float" min="-1" max="1" _gui-text="Area fill shift">0</param>
+			<param name="area-fill-method"  _gui-text="Filling method" type="optiongroup">
+				<_option value="zig-zag">Zig-zag</_option>
+				<_option value="spiral">Spirale</_option>
+			</param>
+		</page>
+
+		<page name='area_artefacts' _gui-text='Area artifacts'>	
+			<param name="area-find-artefacts-diameter" type="float" min="0.01" max="1000" _gui-text="Artifact diameter:">5.0</param>
+			<param name="area-find-artefacts-action" type="optiongroup" _gui-text="Action:">
+				<_option value="mark with an arrow">Marquer d'une flèche</_option>
+				<_option value="mark with style">Marque avec style</_option>
+				<_option value="delete">supprimer</_option>
+			</param>	
+			<_param name="help" type="description">
+Usage:
+1. Sélectionnez tous les décalages de zone (contours gris)
+2. Objet / Dégrouper (Maj + Ctrl + G)
+3. Appuyez sur Appliquer
+
+Les petits objets soupçonnés seront marqués par des flèches colorées.
+			</_param>
+		</page>		
+
+		<page name='path-to-gcode' _gui-text='Path to Gcode'>	
+				<param name="biarc-tolerance" type='float' precision="5" _gui-text='Biarc interpolation tolerance:'>1</param>
+				<param name="biarc-max-split-depth" type="int" _gui-text="Maximum splitting depth:">4</param>
+				<param name="path-to-gcode-order"  _gui-text="Cutting order" type="optiongroup" appearance="minimal">
+					<_option value="subpath by subpath">Sous-chemin par sous-chemin</_option>
+					<_option value="path by path">Chemin par chemin</_option>
+					<_option value="pass by pass">Passe par Passe</_option>
+				</param>
+				
+				<param name="path-to-gcode-depth-function" type="string" _gui-text="Depth function:">d</param>			
+				<param name="path-to-gcode-sort-paths" type="boolean" _gui-text="Sort paths to reduse rapid distance">True</param>			
+				
+				<_param name="help" type="description">
+La tolérance d'interpolation Biarc est la distance maximale entre le chemin et son approximation.
+Le segment sera divisé en deux segments si la distance entre le segment du trajet et son approximation dépasse la tolérance d'interpolation biarc.
+Pour la fonction de profondeur c = intensité de la couleur de 0,0 (blanc) à 1,0 (noir), d est la profondeur définie par les points d 'orientation, s - surface définie par des points d' orientation.
+</_Param>
+		</page>
+
+		<page name='options' _gui-text='Options'>
+			<param name="Zscale" type="float" precision="5" min="-100000" max="100000" _gui-text="Scale along Z axis:">1</param>			
+			<param name="Zoffset" type="float" precision="5" min="-100000" max="100000" _gui-text="Offset along Z axis:">0.0</param>
+			<param name="auto_select_paths" type="boolean" _gui-text="Select all paths if nothing is selected">true</param>
+			<param name="min-arc-radius" type="float" precision="5" min="-1000" max="1000"  _gui-text="Minimum arc radius:">0.05</param>
+			<param name="comment-gcode" type="string" _gui-text="Comment Gcode:"></param>
+			<param name="comment-gcode-from-properties" type="boolean" _gui-text="Get additional comments from object's properties">False</param>
+			
+		</page>
+
+		<page name='preferences' _gui-text='Preferences'>
+			<param name="filename" type="string" _gui-text="File:">output.ngc</param>
+			<param name="add-numeric-suffix-to-filename" type="boolean" _gui-text="Add numeric suffix to filename">true</param>
+			
+			<param name="directory" type="string" _gui-text="Directory:">/home</param>
+
+			<param name="Zsafe" type="float" precision="5" min="-1000" max="1000" _gui-text="Z safe height for G00 move over blank:">5</param>
+			<param name="unit" type="enum" _gui-text="Units (mm or in):">
+				<_item value="G21 (All units in mm)">mm</_item>
+				<_item value="G20 (All units in inches)">in</_item>
+			</param>
+			<param name="postprocessor" type="enum" _gui-text="Post-processor:">
+				<_item value=" ">Aucun</_item>
+				<_item value="parameterize();">Paramétrer Gcode</_item>
+				<_item value="flip(y);parameterize();">Inverser l'axe y et paramétrer Gcode</_item>
+				<_item value="round(4);">Arrondir toutes les valeurs à 4 chiffres</_item>
+				<_item value='regex("G01 Z([0-9\.\-]+).*\(Penetrate\)", lambda match: "G00 Z%f (Fast pre-penetrate)\n%s" %(float(match.group(1))+5, match.group(0)));'>Pré-pénétration rapide</_item>
+			</param>
+			<param name="postprocessor-custom" type="string" _gui-text="Additional post-processor:"></param>			
+			
+
+			<param name="create-log" type="boolean" _gui-text="Generate log file">faux</param>			
+			<param name="log-filename" type="string" _gui-text="Full path to log file:"></param>			
+			
+		</page>
+
+		<page name='help' _gui-text='Help'>
+			<_param name="fullhelp" type="description">
+Plug-in Gcodetools: convertit les tracés en Gcode (à l'aide d'une interpolation circulaire), effectue des trajectoires décalées et grave des angles vifs à l'aide de coupe-cônes.
+Ce plug-in calcule du Gcode pour les chemins en utilisant une interpolation circulaire ou un mouvement linéaire si nécessaire.
+
+Vous trouverez des tutoriels, des manuels et des
+Forum de soutien en anglais:
+Http://www.cnc-club.ru/gcodetools
+
+Et forum de soutien russe:
+Http://www.cnc-club.ru/gcodetoolsru
+
+Crédits: Nick Drobchenko, Vladimir Kalyaev, John Brooker, Henry Nicolas, Chris Lusby Taylor.
+
+Gcodetools ver. 1,7 FR
+</_param>	
+
+		</page>
+
+	</param>	
+    <effect>
+		<effects-menu>
+			<submenu _name="Gcodetools"/>
+		</effects-menu>
+		<object-type>path</object-type>
+    </effect>
+    <script>
+        <command reldir="extensions" interpreter="python">gcodetools.py</command>
+    </script>
+</inkscape-extension>

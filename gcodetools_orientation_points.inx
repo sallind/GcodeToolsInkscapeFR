@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+    <name>Orientation points</name>
+    <id>ru.cnc-club.filter.gcodetools_orientation_no_options_no_preferences</id>
+	<dependency type="executable" location="extensions">gcodetools.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<param name='active-tab' type="notebook">
+
+		<page name='orientation' _gui-text='Orientation'>	
+
+			<param name="orientation-points-count" type="optiongroup" _gui-text="Orientation type:">
+<_option value="2">Mode 2 points
+(Déplacer et tourner,
+Maintenu ratio X / Y)</_option>
+<_option value="3">Mode 3 points
+(Mouvement, rotation et miroir,
+Échelle X / Y différente)</_option>
+<_option value="graffiti">graffiti points</_option>
+<_option value="in-out reference point">>Point de référence entrée / sortie</_option>
+
+			</param>
+			<param name="Zsurface" type="float" precision="5" min="-1000" max="1000" _gui-text="Z surface:">0</param>
+			<param name="Zdepth" type="float" precision="5" min="-1000" max="1000" _gui-text="Z depth:">-1</param>
+			<param name="unit" type="enum" _gui-text="Units (mm or in):">
+				<_item value="G21 (All units in mm)">mm</_item>
+				<_item value="G20 (All units in inches)">in</_item>
+			</param>
+
+			<_param name="help" type="description">
+Les points d'orientation sont utilisés pour calculer la transformation (décalage, échelle, miroir, rotation dans le plan XY) du chemin.
+Mode 3 points seulement: ne mettez pas tous les trois dans une seule ligne (utilisez le mode 2 points à la place).
+
+Vous pouvez modifier la surface Z, les valeurs de profondeur Z ultérieurement à l'aide de l'outil de texte (3ème coordonnées).
+
+S'il n'y a pas de points d'orientation à l'intérieur de la couche courante, ils sont extraits de la couche supérieure.
+
+Ne pas dégrouper les points d'orientation! Vous pouvez les sélectionner en cliquant deux fois pour entrer dans le groupe ou en appuyant sur Ctrl + Clic.
+
+Appuyez maintenant sur appliquer pour créer des points de contrôle (ensemble indépendant pour chaque couche).
+			</_param>
+		</page>
+
+		<page name='help' _gui-text='Help'>
+			<_param name="fullhelp" type="description">
+Plug-in Gcodetools: convertit les tracés en Gcode (à l'aide d'une interpolation circulaire), effectue des trajectoires décalées et grave des angles vifs à l'aide de coupe-cônes.
+Ce plug-in calcule du Gcode pour les chemins en utilisant une interpolation circulaire ou un mouvement linéaire si nécessaire.
+
+Vous trouverez des tutoriels, des manuels et des
+Forum de soutien en anglais:
+Http://www.cnc-club.ru/gcodetools
+
+Et forum de soutien russe:
+Http://www.cnc-club.ru/gcodetoolsru
+
+Crédits: Nick Drobchenko, Vladimir Kalyaev, John Brooker, Henry Nicolas, Chris Lusby Taylor.
+
+Gcodetools ver. 1,7 FR
+</_param>	
+
+		</page>
+
+	</param>	
+    <effect>
+		<effects-menu>
+			<submenu _name="Gcodetools"/>
+		</effects-menu>
+		<object-type>path</object-type>
+    </effect>
+    <script>
+        <command reldir="extensions" interpreter="python">gcodetools.py</command>
+    </script>
+</inkscape-extension>

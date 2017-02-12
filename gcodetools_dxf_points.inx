@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+    <name>DXF Points</name>
+    <id>ru.cnc-club.filter.gcodetools_dxfpoints_no_options</id>
+	<dependency type="executable" location="extensions">gcodetools.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<param name='active-tab' type="notebook">
+
+		<page name='dxfpoints' _gui-text='DXF points'>
+			<_param name="help" type="description">
+
+Convertissez les objets sélectionnés en points de forage (comme le fait le plugin dxf_import). Aussi, vous pouvez enregistrer la forme originale. Seul le point de départ de chaque courbe sera utilisé.
+
+Vous pouvez également sélectionner manuellement l'objet, ouvrir l'éditeur de XML (Shift + Ctrl + X) et ajouter ou enlever la balise XML 'dxfpoint' avec n'importe quelle valeur.
+		  </_param>
+			<param type='optiongroup' name='dxfpoints-action' _gui-text="Convert selection:">
+<_option value='save'>Définir comme dxfpoint et enregistrer la forme</_option>
+<_option value='replace'>Définir comme dxfpoint et flèche de dessiner</_option>
+<_option value='clear'>Signe clair dxfpoint</_option>
+			</param>
+
+		</page>
+
+		<page name='preferences' _gui-text='Preferences'>
+			<param name="filename" type="string" _gui-text="File:">output.ngc</param>
+			<param name="add-numeric-suffix-to-filename" type="boolean" _gui-text="Add numeric suffix to filename">true</param>
+			
+			<param name="directory" type="string" _gui-text="Directory:">/home</param>
+
+			<param name="Zsafe" type="float" precision="5" min="-1000" max="1000" _gui-text="Z safe height for G00 move over blank:">5</param>
+			<param name="unit" type="enum" _gui-text="Units (mm or in):">
+				<_item value="G21 (All units in mm)">mm</_item>
+				<_item value="G20 (All units in inches)">in</_item>
+			</param>
+			<param name="postprocessor" type="enum" _gui-text="Post-processor:">
+				<_item value=" ">Aucun</_item>
+				<_item value="parameterize();">Paramétrer Gcode</_item>
+				<_item value="flip(y);parameterize();">Inverser l'axe y et paramétrer Gcode</_item>
+				<_item value="round(4);">Arrondir toutes les valeurs à 4 chiffres</_item>
+				<_item value='regex("G01 Z([0-9\.\-]+).*\(Penetrate\)", lambda match: "G00 Z%f (Fast pre-penetrate)\n%s" %(float(match.group(1))+5, match.group(0)));'>Fast pre-penetrate</_item>
+			</param>
+			<param name="postprocessor-custom" type="string" _gui-text="Additional post-processor:"></param>			
+			
+
+			<param name="create-log" type="boolean" _gui-text="Generate log file">faux</param>			
+			<param name="log-filename" type="string" _gui-text="Full path to log file:"></param>			
+			
+		</page>
+
+		<page name='help' _gui-text='Help'>
+			<_param name="fullhelp" type="description">
+Plug-in Gcodetools: convertit les tracés en Gcode (à l'aide d'une interpolation circulaire), effectue des trajectoires décalées et grave des angles vifs à l'aide de coupe-cônes.
+Ce plug-in calcule du Gcode pour les chemins en utilisant une interpolation circulaire ou un mouvement linéaire si nécessaire.
+
+Vous trouverez des tutoriels, des manuels et des
+Forum de soutien en anglais:
+Http://www.cnc-club.ru/gcodetools
+
+Et forum de soutien russe:
+Http://www.cnc-club.ru/gcodetoolsru
+
+Crédits: Nick Drobchenko, Vladimir Kalyaev, John Brooker, Henry Nicolas, Chris Lusby Taylor.
+
+Gcodetools ver. 1,7 FR
+</_param>	
+
+		</page>
+
+	</param>	
+    <effect>
+		<effects-menu>
+			<submenu _name="Gcodetools"/>
+		</effects-menu>
+		<object-type>path</object-type>
+    </effect>
+    <script>
+        <command reldir="extensions" interpreter="python">gcodetools.py</command>
+    </script>
+</inkscape-extension>

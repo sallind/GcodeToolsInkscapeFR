@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+    <name>Rechercher des mises à jour</name>
+    <id>ru.cnc-club.filter.gcodetools_update_no_options_no_preferences</id>
+	<dependency type="executable" location="extensions">gcodetools.py</dependency>
+	<dependency type="executable" location="extensions">inkex.py</dependency>
+	<param name='active-tab' type="notebook">
+
+	<page name='update' _gui-text='Check for updates'>	
+		<_param name="help" type="description">Vérifiez la dernière version stable de Gcodetools et essayez d'obtenir les mises à jour.</_param>
+	</page>
+
+		<page name='help' _gui-text='Help'>
+			<_param name="fullhelp" type="description">
+Plug-in Gcodetools: convertit les tracés en Gcode (à l'aide d'une interpolation circulaire), effectue des trajectoires décalées et grave des angles vifs à l'aide de coupe-cônes.
+Ce plug-in calcule du Gcode pour les chemins en utilisant une interpolation circulaire ou un mouvement linéaire si nécessaire.
+
+Vous trouverez des tutoriels, des manuels et des
+Forum de soutien en anglais:
+Http://www.cnc-club.ru/gcodetools
+
+Et forum de soutien russe:
+Http://www.cnc-club.ru/gcodetoolsru
+
+Crédits: Nick Drobchenko, Vladimir Kalyaev, John Brooker, Henry Nicolas, Chris Lusby Taylor.
+
+Gcodetools ver. 1,7 FR
+</_param>	
+
+		</page>
+
+	</param>	
+    <effect>
+		<effects-menu>
+			<submenu _name="Gcodetools"/>
+		</effects-menu>
+		<object-type>path</object-type>
+    </effect>
+    <script>
+        <command reldir="extensions" interpreter="python">gcodetools.py</command>
+    </script>
+</inkscape-extension>
